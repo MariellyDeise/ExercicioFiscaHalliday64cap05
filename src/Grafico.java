@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import java.text.DecimalFormat;
 
 public class Grafico implements ActionListener{
 
@@ -31,7 +32,7 @@ public class Grafico implements ActionListener{
 
     public Grafico(){
 
-    JFrame myJframe = new JFrame();// cria uma caixa
+    JFrame myJframe = new JFrame("Marielly Deise - 2 C. Comp. | Exec. 64 cap. 05 Halliday");// cria uma caixa
     myJframe.setVisible(true);
     myJframe.setSize(515, 450);// regula o tamanho da caixa.
     myJframe.setResizable(false);
@@ -96,49 +97,51 @@ public class Grafico implements ActionListener{
     myJframe.add(imagem);
     imagem.setBounds(120, 18, img.getIconWidth(), img.getIconHeight());// Formatar a imagem.
 
-    JLabel JLabel_tracao = new JLabel("Tracao da corda:");
-    JLabel_tracao.setBounds(50, 260, 100, 20);
+    JLabel JLabel_tracao = new JLabel("Tracao da corda (N):");
+    JLabel_tracao.setBounds(50, 260, 150, 20);
     myJframe.add(JLabel_tracao);
     JLabel_tracao.setFont(font);
 
     JLabel_resultado_tracao = new JLabel("__");
-    JLabel_resultado_tracao.setBounds(160, 260, 300, 20);
+    JLabel_resultado_tracao.setBounds(190, 260, 300, 20);
     myJframe.add(JLabel_resultado_tracao);
     JLabel_resultado_tracao.setFont(font);
 
-    JLabel JLabel_aceleracao_m1 = new JLabel("Aceleracao m1:");
-    JLabel_aceleracao_m1.setBounds(50, 290, 100, 20);
+    JLabel JLabel_aceleracao_m1 = new JLabel("Aceleracao caixa 1 (m/s\u00B2):");
+    JLabel_aceleracao_m1.setBounds(50, 290, 200, 20);
     myJframe.add(JLabel_aceleracao_m1);
     JLabel_aceleracao_m1.setFont(font);
 
     JLabel_resultado_aceleracao_m1 = new JLabel("__");
-    JLabel_resultado_aceleracao_m1.setBounds(160, 290, 60, 20);
+    JLabel_resultado_aceleracao_m1.setBounds(210, 290, 60, 20);
     myJframe.add(JLabel_resultado_aceleracao_m1);
     JLabel_resultado_aceleracao_m1.setFont(font);
 
-    JLabel JLabel_aceleracao_m2 = new JLabel("Aceleracao m2:");
-    JLabel_aceleracao_m2.setBounds(50, 320, 100, 20);
+    JLabel JLabel_aceleracao_m2 = new JLabel("Aceleracao caixa 2 (m/s\u00B2):");
+    JLabel_aceleracao_m2.setBounds(50, 320, 200, 20);
     myJframe.add(JLabel_aceleracao_m2);
     JLabel_aceleracao_m2.setFont(font);
 
     JLabel_resultado_aceleracao_m2 = new JLabel("__");
-    JLabel_resultado_aceleracao_m2.setBounds(160, 320, 60, 20);
+    JLabel_resultado_aceleracao_m2.setBounds(210, 320, 60, 20);
     myJframe.add(JLabel_resultado_aceleracao_m2);
     JLabel_resultado_aceleracao_m2.setFont(font);
 
-    JLabel Jlabel_forca_max = new JLabel("Modulo da forca horizontal maxima:");
+    JLabel Jlabel_forca_max = new JLabel("Modulo da forca horizontal maxima (N):");
     Jlabel_forca_max.setBounds(50, 350, 390, 20);
     myJframe.add(Jlabel_forca_max);
     Jlabel_forca_max.setFont(font);
 
     JLabel_resultado_forca_max = new JLabel("__");
-    JLabel_resultado_forca_max.setBounds(280, 350,60, 20);
+    JLabel_resultado_forca_max.setBounds(290, 350,60, 20);
     myJframe.add(JLabel_resultado_forca_max);
     JLabel_resultado_forca_max.setFont(font);
 
 
     myJframe.setVisible(true);
     }
+
+    DecimalFormat df = new DecimalFormat("#.###");
 
     @Override
     public void actionPerformed(ActionEvent e){
@@ -150,11 +153,15 @@ public class Grafico implements ActionListener{
 
         angulo = angulo * (3.14159265 / 180.0); // converte angulo para radiano.
 
+        if(m1 < 0 || m2 < 0){
+            erro2();
+        }
+
         if(m1 > 500 || m2 > 500){
-            QuebrouASuperficie();
+            quebrouASuperficie();
         }else{
             if(angulo < 0){
-                Erro();
+                erro();
             }else if(angulo > 90){
                 angulo = 90;
                 comparacao = m1 * ((9.8) * Math.sin(angulo));
@@ -175,23 +182,34 @@ public class Grafico implements ActionListener{
             }
         }
 
-        JLabel_resultado_aceleracao_m1.setText(" " + aceleracao_m1);
-        JLabel_resultado_aceleracao_m2.setText(" " + aceleracao_m2);
+        String aceleracao_m1_String = df.format(aceleracao_m1);
+        String aceleracao_m2_String = df.format(aceleracao_m2);
+        String tracao_String = df.format(tracao);
+        String comparacao_String = df.format(comparacao);
+
+
+
+        JLabel_resultado_aceleracao_m1.setText(aceleracao_m1_String);
+        JLabel_resultado_aceleracao_m2.setText(aceleracao_m2_String);
 
         if(possivel_calc_tracao == true){
-            JLabel_resultado_tracao.setText(" " + tracao);
+            JLabel_resultado_tracao.setText(tracao_String);
         }else{
             JLabel_resultado_tracao.setText(" 0");
         }
 
-        JLabel_resultado_forca_max.setText(" " + comparacao);
+        JLabel_resultado_forca_max.setText(comparacao_String);
     }
 
-    public void Erro(){
+    public void erro(){
         JOptionPane.showMessageDialog(null,"O angulo da rampa nao pode ser menor que 0.", "Erro!", JOptionPane.ERROR_MESSAGE);
     }
 
-    public void QuebrouASuperficie(){
+    public void erro2(){
+        JOptionPane.showMessageDialog(null,"O numero da massa nao pode ser negativo.", "Erro!", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public void quebrouASuperficie(){
         JOptionPane.showMessageDialog(null,"Voce quebrou a rampa, a massa das caixas não podem ser maior que 500Kg.", "Erro!", JOptionPane.ERROR_MESSAGE);
     }
     
